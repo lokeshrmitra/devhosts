@@ -1,6 +1,8 @@
 # Developer Hangout Coding Challenge
 ## May 2018 - e-commerce backend
+
 *lokeshrmitra#8590*
+
 *External libraries - express, body-parser, monogoose, jsonwebtoken, bcryptjs*
 
 *Database - mLab*
@@ -36,6 +38,7 @@ _x-www-form-urlencoded'_ parameters : email, password, name, age, address
 	Deletes the user .
 ___
 ***Products***
+
 These endpoints don't need the JWT
 
 * `GET https://lokeshrmitra-devhosts.herokuapp.com/products/`
