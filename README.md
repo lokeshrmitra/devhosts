@@ -84,3 +84,78 @@ Transfer only a single item from cart to purchased products.
 * `PUT https://lokeshrmitra-devhosts.herokuapp.com/user/order/:id`
 
 Set the state of any purchased product as `Inactive`.  The `inactivation_date` will be added, this will contain the timestamp of the inactivation time
+
+
+###App Description
+I had first thought of having different Schemas for every different type of product, and also include functions regarding manipulating the products' attribute. But then, this type of management comes under some automated tracking service (or an admin), so I skipped it.
+I have just put all the products as documents(with their specific attributes) in a collection
+
+An example document:
+```javascript
+{
+    "_id": "5b0daee20c25c335a0f50797",
+    "name": "Panther",
+    "type": "server",
+    "prodid": "13",
+    "memory": "4 GB",
+    "cpu": 2,
+    "storage": "100 GB",
+    "transefer": "10 TB",
+    "price": 25
+}
+```
+I had intially used the `prodid`s and `type` attributes to differentiate products. But now i don't use them. They are free to be used in the front end in any correct way
+
+
+Next, to track `cart` and `order_history` I've just added object Arrays in the user document
+An example document of user:
+```javascript
+{
+    "_id": {
+        "$oid": "5b0fd71755cd09001404862f"
+    },
+    "cart": [
+    	 {
+            "prodid": "31",
+            "name": "Load Balancer",
+            "price": 25,
+            "iat": 1527769536136,
+            "status": "Active"
+        },
+        {
+            "prodid": "11",
+            "name": "Lynx",
+            "price": 15,
+            "iat": 1527769536136,
+            "status": "Active"
+        }
+    ],
+    "order_history": [
+        {
+            "prodid": "13",
+            "name": "Panther",
+            "price": 25,
+            "iat": 1527769536136,
+            "status": "Inactive",
+            "inactivation_date": 1527769585615
+        },
+        {
+            "prodid": "51",
+            "name": "Telescope Andromeda",
+            "price": 25,
+            "iat": 1527769536136,
+            "status": "Active"
+        }
+    ],
+    "name": "Lokesh R Mitra",
+    "email": "lokeshrmitra@gmail.com",
+    "password": "$2a$10$pl1ApxX1CIQXdNsdsKzv5.no3mOclIJOdhGVW8c6NPw7086z3xnPS",
+    "age": 21,
+    "address": "RH 4, GuruganeshNagar, Aurangabad 431003",
+    "__v": 0
+}
+```
+
+One issue I faced was dealing with authentication. I couldn't find a way to maually expire the JWTs that are issued (I didn't want to use blacklisting). This problem still exists. You can use the JWT to delete your own account. Then after that you should not be able to access any user specific routes,  but this does not happen. You can't get any other user's data, but still I don't find this OK/
+
+Thanks for the challenge, it was really helpful.
