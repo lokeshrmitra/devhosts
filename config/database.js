@@ -1,9 +1,9 @@
-/*if(process.env.NODE_ENV == 'production'){
+if(process.env.NODE_ENV == 'production'){
     module.exports = {
-        mongoURI : 'mongodb://lokesh:lokesh@ds121889.mlab.com:21889/vidjot-prod'
+        mongoURI : 'mongodb://lokeshrmitra:lokesh789@ds141720.mlab.com:41720/devhosts'
     }
-}else{*/
+}else{
     module.exports = {
         mongoURI : 'mongodb://localhost/devhosts-dev'
     }
-//}
+}
