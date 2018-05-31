@@ -35,5 +35,8 @@ app.use(bodyParser.json())
 //bring user routes
 const user = require('./routes/user');
 app.use('/user', user);
+//bring products route
+const products = require('./routes/products');
+app.use('/products', products);
 
 app.listen(PORT, () => console.log(`SV started on port ${PORT}`));

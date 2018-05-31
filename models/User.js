@@ -10,10 +10,22 @@ const UserSchema = new Schema({
         type: String,
         required : true
     },
+    address:{
+        type: String
+    },
+    age: {
+        type: Number
+    },
     password: {
         type: String,
         required: true
     },
+    cart:{
+        type: Array
+    },
+    order_history:{
+        type: Array
+    }
 });
 
 mongoose.model('user', UserSchema);
