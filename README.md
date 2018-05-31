@@ -7,7 +7,7 @@
 
 **Endpoints :**
 Most of the endpoints return	JSON object with `success` or `error` message
-
+---
 ***User***
 * `POST https://lokeshrmitra-devhosts.herokuapp.com/user/register`
 
@@ -34,7 +34,7 @@ _x-www-form-urlencoded'_ parameters : email, password, name, age, address
 *	`DELETE https://lokeshrmitra-devhosts.herokuapp.com/user/`
 
 	Deletes the user .
-
+---
 ***Products***
 These endpoints don't need the JWT
 
@@ -65,7 +65,7 @@ Will empty the entire cart with purchasing them.
 * `DELETE https://lokeshrmitra-devhosts.herokuapp.com/user/cart/:id`
 
 Will remove the specific product from the cart as given by the 'id'. 'id' should be present in the cart.
-___
+
 * `GET https://lokeshrmitra-devhosts.herokuapp.com/user/order`
 
 Returns all the products purchased by the user. Also returns a field `mothly_total` for all the `Active` products.
