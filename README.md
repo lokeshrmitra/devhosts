@@ -10,9 +10,11 @@ Most of the endpoints return	JSON object with `success` or `error` message
 
 ***User***
 * `POST https://lokeshrmitra-devhosts.herokuapp.com/user/register`
+
 _x-www-form-urlencoded'_ parameters : email, password, name, age, address
 	
 * `POST https://lokeshrmitra-devhosts.herokuapp.com/user/login`
+
 	Form data passed: email, password
 	This will return a JSON object as:
 	```javascript
@@ -23,11 +25,14 @@ _x-www-form-urlencoded'_ parameters : email, password, name, age, address
 	```
 	This JWT("token") has to be sent with every request, that is specific to the user ( i.e. in the /user/ ), in the `Authorization` header. The JWT expiration time has been set to 2hr
 * 	`PUT https://lokeshrmitra-devhosts.herokuapp.com/user/`
+
 	Used for updating user info with the parameters : name, age, address.
 	Email and password can't be updated
 * `GET https://lokeshrmitra-devhosts.herokuapp.com/user/`
+
 	Returns basic user information.
 *	`DELETE https://lokeshrmitra-devhosts.herokuapp.com/user/`
+
 Deletes the user .
 
 ***Products***
