@@ -348,7 +348,7 @@ router.post('/login', (req,res)=>{
                     bcrypt.compare(req.body.password, user.password, (err, isMatch)=>{
                         if(err) throw err;
                         if(isMatch){
-                            jwt.sign({email: user.email}, 'keyboard dog',{expiresIn:'1h'} ,(err, token)=>{
+                            jwt.sign({email: user.email}, 'keyboard dog',{expiresIn:'2h'} ,(err, token)=>{
                                 if(err) res.status(401).json(err);
                                 else{
                                     res.json({
