@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 //const session = require('express-session');
 //const passport = require('passport');
 
-const PORT = 5002 || process.env.PORT;
+const PORT = process.env.PORT || 5002;
 
 //intialize
 var app = express();
@@ -15,19 +15,6 @@ mongoose.connect(db.mongoURI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
 
-//session middleware
-/*
-app.use(session({
-    secret : 'keyboard dog',
-    saveUninitialized : true,
-    resave : true
-}));
-//passport config
-require('./config/passport')(passport);
-//passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
-*/
 //body-parser middleware
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
