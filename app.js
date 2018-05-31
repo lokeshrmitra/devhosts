@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 //const session = require('express-session');
 //const passport = require('passport');
 
-const PORT = 5002;
+const PORT = 5002 || process.env.PORT;
 
 //intialize
 var app = express();
