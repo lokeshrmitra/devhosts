@@ -3,7 +3,7 @@
 
 *lokeshrmitra#8590*
 
-*External libraries - express, body-parser, monogoose, jsonwebtoken, bcryptjs*
+*External libraries - express, body-parser, mongoose, jsonwebtoken, bcryptjs*
 
 *Database - mLab*
 
