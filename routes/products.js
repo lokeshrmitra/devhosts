@@ -12,6 +12,8 @@ router.get('/:id', (req, res)=>{
     Product.find({prodid: prodid}).select('-_id')
     .then((prod)=>{
         res.json(prod);
+    },(err)=>{
+        res.sendStatus(500);
     });
 });
 
@@ -20,6 +22,8 @@ router.get('/', (req,res)=>{
     Product.find().select('-_id')
     .then((prod)=>{
         res.json(prod);
+    },(err)=>{
+        res.sendStatus(500);
     });
 });
 

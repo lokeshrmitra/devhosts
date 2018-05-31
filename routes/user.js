@@ -24,87 +24,258 @@ jwt.verify(req.token,'keyboard dog', (err, data)=>{
     });
 */ 
 
-//get cart data
-router.get('/cart', (req, res)=>{
-    User.findOne({email:'lokeshrmitra@gmail.com'})
-    .then((user)=>{
-        if(user.cart.length > 0){
-            let prodids = [];
-            for(var i=0;i<user.cart.length;i++){
-                prodids.push(user.cart[i].prodid);
-            }
-            console.log(prodids);
-            Product.find({prodid: {$in:prodids} })
-            .then((products)=>{
-                res.json(products);
+//get purchase history
+router.get('/order', myV.verifyJWT, (req,res)=>{
+    jwt.verify(req.token,'keyboard dog', (err, data)=>{
+        if(err)res.sendStatus(401);
+        else{
+            User.findOne({email: data.email}).lean()
+            .then((user)=>{
+                if(user.order_history.length > 0){
+                    let hist = user.order_history;
+                    let monthly_total = 0;
+                    for(var i=0;i<hist.length;i++){
+                        if(hist[i].status == "Active")                        
+                            monthly_total += hist[i].price;
+                    }
+                    res.json({
+                        monthly_total,
+                        order_history:hist
+                    });
+                }else{
+                    res.json({error: 'No purchase history found'});
+                }
             },(err)=>{
-                res.sendStatus(500);
-                consoe.log(err);
-            });
-        }else{
-            res.send('none found');
+                console.log(err);
+            });     
         }
-    })
+    });
 });
 
-//purchase the product = remove all items from cart, add to order_history
-router.post('/order', (req, res)=>{
-    User.findOne({email: 'lokeshrmitra@gmail.com'})
-    .lean()
-    .then((user)=>{
-        let myCart = user.cart;
-        if(myCart.length <= 0) return res.sendStatus(403);
-        for(var i=0; i<myCart.length; i++){
-            myCart[i].iat = Date.now();
-        }
-        
-        User.update(
-            {email:'lokeshrmitra@gmail.com'},
-            {$set : {cart : []},
-             $push :{
-                 order_history : {
-                     $each: myCart
-                 }
-             }
-            },
-            {new : true},
-            (err, doc)=>{
-                if(err){
-                    res.sendStatus(500);
-                    console.error(err);
+//get cart data
+router.get('/cart', myV.verifyJWT, (req,res)=>{
+    jwt.verify(req.token,'keyboard dog', (err, data)=>{
+        if(err)res.sendStatus(401);
+        else{
+            User.findOne({email:data.email})
+            .then((user)=>{
+                if(user.cart.length > 0){
+                    let cart_total = 0;
+                    for(var i=0;i<user.cart.length;i++){
+                        cart_total += user.cart[i].price;
+                    }
+                    res.json({
+                        cart_total,
+                        cart: user.cart
+                    })
+                }else{
+                    res.json({error: 'Cart empty'});
                 }
-                else res.json({success: 'Cart checked out'});
-            }
-        )
+            })     
+        }
+    });
+});
+
+//inactivate a product from the oreder_history
+router.put('/order/:id', myV.verifyJWT, (req,res)=>{
+    jwt.verify(req.token,'keyboard dog', (err, data)=>{
+        if(err)res.sendStatus(401);
+        else{
+            User.update(
+                {email: data.email, "order_history.prodid": req.params.id},
+                {
+                    $set:{
+                        "order_history.$.status": "Inactive",
+                        "order_history.$.inactivation_date": Date.now()
+                    }
+                },
+                (err, doc)=>{
+                    if(err){
+                        res.sendStatus(503);
+                        console.log(err);
+                    }else{
+                        res.json({success: `Product ${req.params.id} Inactivated`});
+                    }
+                }
+            );     
+        }
+    });
+});
+
+//order only a single item from cart (params.id = cart's product id)
+router.post('/order/:id', myV.verifyJWT, (req,res)=>{
+    /*Some gateway receipt or token to be checked before actually ordering
+    * if(!verifyReceipt(req.body.receipt)) return
+    */
+    jwt.verify(req.token,'keyboard dog', (err, data)=>{
+        if(err)res.sendStatus(401);
+        else{
+            User.findOne({email: data.email})
+            .lean()
+            .then((user)=>{
+                let singleItem = null;
+                for(var i=0;i<user.cart.length;i++){
+                    if(user.cart[i].prodid == req.params.id){
+                        singleItem = user.cart[i];
+                        singleItem.iat = Date.now();
+                        singleItem.status = "Active";                        
+                    }
+                }
+                if(singleItem == null) return res.status(400).json({error: 'Invalid product id from cart'});
+                User.update(
+                    {email:data.email},
+                    {$pull : {cart : {
+                        prodid: singleItem.prodid
+                    }},
+                     $push :{
+                         order_history : singleItem
+                     }
+                    },            
+                    (err, doc)=>{
+                        if(err){
+                            res.sendStatus(500);
+                            console.error(err);
+                        }
+                        else res.json({success: `Cart item ${req.params.id} checked out`});
+                    }
+                )
+            });    
+        }
+    });
+});
+
+//order entire cart, remove all items from cart, add to order_history
+router.post('/order', myV.verifyJWT, (req,res)=>{
+    /*Some gateway receipt or token to be checked before actually ordering
+    * if(!verifyReceipt(req.body.receipt)) return
+    */
+    jwt.verify(req.token,'keyboard dog', (err, data)=>{
+        if(err)res.sendStatus(401);
+        else{
+            User.findOne({email: data.email})
+            .lean()
+            .then((user)=>{
+                let myCart = user.cart;
+                if(myCart.length <= 0) return res.status(403).json({error: 'No items in cart'});
+                for(var i=0; i<myCart.length; i++){
+                    myCart[i].iat = Date.now();
+                    myCart[i].status = "Active";
+                }
+                
+                User.update(
+                    {email:data.email},
+                    {$set : {cart : []},
+                    $push :{
+                        order_history : {
+                            $each: myCart
+                        }
+                    }
+                    },
+                    {new : true},
+                    (err, doc)=>{
+                        if(err){
+                            res.sendStatus(500);
+                            console.error(err);
+                        }
+                        else res.json({success: 'Cart checked out'});
+                    }
+                )
+            });     
+        }
+    });
+});
+
+//delete prod from cart w/o purchasing
+router.delete('/cart/:id', myV.verifyJWT, (req, res)=>{
+    jwt.verify(req.token,'keyboard dog', (err, data)=>{
+        if(err)res.sendStatus(401);
+        else{
+            User.update(
+                {email: data.email},
+                {
+                    $pull: {
+                        cart:{
+                            prodid: req.params.id
+                        }
+                    }
+                },
+                (err, doc)=>{
+                    if(err)res.sendStatus(501);
+                    else res.json({success: `Product ${req.params.id} removed`});
+                }
+            );
+        }
+    });
+});
+
+//empty entire cart w/o purchasing
+router.delete('/cart', myV.verifyJWT, (req, res)=>{
+    jwt.verify(req.token,'keyboard dog', (err, data)=>{
+        if(err)res.sendStatus(401);
+        else{
+            User.update(
+                {email: data.email},
+                {
+                    $set: {
+                        cart: []
+                    }
+                },
+                (err, doc)=>{
+                    if(err)res.sendStatus(501);
+                    else res.json({success: `Cart emptied`});
+                }
+            );
+        }
     });
 });
 
 //add a prod to user cart body data=id,no
-router.post('/cart', (req, res)=>{
-    let no_of_months=1;
-    if(req.body.id != null){
-        if(req.body.no_of_months != null) no_of_months = parseInt(req.body.no_of_months+'');
-        Product.findOne({prodid: req.body.id})
-        .then((prod)=>{
-            if(prod != null){
-                User.update(
-                    {email : 'lokeshrmitra@gmail.com'},
-                    {$push: {
-                        cart:{
-                            prodid: prod.prodid,
-                            no_of_months,
-                        }
+router.post('/cart/:id', myV.verifyJWT, (req,res)=>{
+    jwt.verify(req.token,'keyboard dog', (err, data)=>{
+        if(err)res.sendStatus(401);
+        else{
+            User.findOne({email:data.email})
+            .then((user)=>{
+                for(var i=0;i<user.cart.length;i++){
+                    if(user.cart[i].prodid == req.params.id) {
+                        return res.json({error: 'Product already added to cart'});             
                     }
-                }).then((info)=>{
-                    if(info.ok == 1)
-                        res.json({success: `Prod of id ${req.body.id} added to cart`});
-                });
-            }else res.sendStatus(503);
-        }, (err)=>{
-            res.sendStatus(500);
-            console.log(err);
-        });
-    }
+                }
+                for(var i=0;i<user.order_history.length;i++){
+                    if(user.order_history[i].prodid == req.params.id && user.order_history[i].status == "Active" ){
+                        return res.json({error: 'Product already ordered'});
+                    }
+                }
+                Product.findOne({prodid: req.params.id})
+                .then((prod)=>{
+                    if(prod != null){
+                        User.update(
+                            {email : data.email},
+                            {$push: {
+                                cart:{
+                                    prodid: prod.prodid,
+                                    name: prod.name,
+                                    price : prod.price
+                                    }
+                                }
+                            },
+                            (errr, doc)=>{
+                                if(errr){
+                                    res.sendStatus(501);
+                                    console.log(err);
+                                }else{
+                                    res.json({success: `Prod of id ${req.params.id} added to cart`});
+                                }
+                            });                        
+                    }else res.status(500).json({error: 'Inavild product id'});
+                }, (err)=>{
+                    res.sendStatus(500);
+                    console.log(err);
+                });    
+            });
+             
+        }
+    });    
 });
 
 //get user information
@@ -129,18 +300,17 @@ router.put('/',myV.verifyJWT ,(req, res)=>{
     jwt.verify(req.token,'keyboard dog', (err, data)=>{
         if(err)res.sendStatus(401);
         else{
-            User.update({email: data.email},{ $set:{
-                name: req.body.name,
-                age: req.body.age,
-                address: req.body.address
-            }}).then((response)=>{
-                if(response.ok === 1)
-                    res.json({success: `User ${req.body.name} updated`});
-                else
-                    res.sendStatus(500);                
-            },(err)=>{
-                res.sendStatus(500);
-            });
+            User.update(
+                {email: data.email},
+                { $set:{
+                    name: req.body.name,
+                    age: req.body.age,
+                    address: req.body.address
+                    }
+                },(err,doc)=>{
+                    if(err)res.sendStatus(500);
+                    else res.json({success: `User ${req.body.name} updated`});
+                });
         }
     });
 });
@@ -156,8 +326,12 @@ router.delete('/', myV.verifyJWT, (req,res)=>{
                     User.remove({email: user.email})
                     .then(()=>{
                         res.json({success: `User with email:${user.email} deleted`});
+                    },(err)=>{
+                        res.sendStatus(500);
                     });
                 }
+            },(err)=>{
+                res.sendStatus(500);
             });
         }
     });
