@@ -7,7 +7,7 @@
 
 **Endpoints :**
 Most of the endpoints return	JSON object with `success` or `error` message
----
+___
 ***User***
 * `POST https://lokeshrmitra-devhosts.herokuapp.com/user/register`
 
@@ -34,7 +34,7 @@ _x-www-form-urlencoded'_ parameters : email, password, name, age, address
 *	`DELETE https://lokeshrmitra-devhosts.herokuapp.com/user/`
 
 	Deletes the user .
----
+___
 ***Products***
 These endpoints don't need the JWT
 
@@ -45,7 +45,7 @@ Returns a JSON array of objects with the products/services and their information
 * `GET https://lokeshrmitra-devhosts.herokuapp.com/products/:id`
 
 Returns a specific product/service identified by the 'id' in the URL.
-
+___
 ***User's interaction with products/services***
 
 These endpoints NEED the JWT
