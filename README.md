@@ -86,7 +86,8 @@ Transfer only a single item from cart to purchased products.
 Set the state of any purchased product as `Inactive`.  The `inactivation_date` will be added, this will contain the timestamp of the inactivation time
 
 
-###App Description
+### App Description
+
 I had first thought of having different Schemas for every different type of product, and also include functions regarding manipulating the products' attribute. But then, this type of management comes under some automated tracking service (or an admin), so I skipped it.
 I have just put all the products as documents(with their specific attributes) in a collection
 
@@ -105,6 +106,7 @@ An example document:
 }
 ```
 I had intially used the `prodid`s and `type` attributes to differentiate products. But now i don't use them. They are free to be used in the front end in any correct way
+
 
 
 Next, to track `cart` and `order_history` I've just added object Arrays in the user document
