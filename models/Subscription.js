@@ -3,14 +3,7 @@ const Schema = mongoose.Schema;
 
 const SubscriptionSchema = new Schema({
     email:String,
-    subscription:{
-        endpoint: String,
-        expirationTime:Number,
-        keys: {
-            p256dh: String,
-            auth: String
-        }
-    }
+    subscription: Object
 },{
     strict: false
 });
