@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const path = require('path');
+const cors = require('cors');
+//const path = require('path');
 //const session = require('express-session');
 //const passport = require('passport');
 
@@ -15,6 +16,9 @@ const db = require('./config/database');
 mongoose.connect(db.mongoURI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
+
+app.use(cors())
+//app.use('/static', express.static(path.join(__dirname, '/static')));
 
 //body-parser middleware
 app.use(bodyParser.urlencoded({ extended: false }))
