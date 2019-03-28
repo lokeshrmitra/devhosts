@@ -72,7 +72,7 @@ router.get('/subs', (req, res)=>{
 });
 
 router.post('/subs/send', (req, res)=>{
-    const email = req.query.email;
+    const email = req.body.email;
     Subscription.findOne({email})
     .then((sub)=>{
         webpush.sendNotification(sub, 'Hello from the other side');
