@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const path = require('path');
 //const session = require('express-session');
 //const passport = require('passport');
 
@@ -18,6 +19,9 @@ mongoose.connect(db.mongoURI)
 //body-parser middleware
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+//set up static public folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 //bring user routes
 const user = require('./routes/user');
