@@ -8,6 +8,36 @@ const Product = mongoose.model('product');
 require('../models/Subscription');
 const Subscription = mongoose.model('subscription');
 
+router.post('/subs', (req,res)=>{
+    const subObj = req.query.subscription;
+    const email = req.query.email;
+
+    new Subscription({
+            email,
+            subscription:subObj
+        })
+        .save()
+        .then(
+            () => {
+                console.log("New user added");
+                res.json({success:"User registered successfully"})
+            },
+            (err) => {
+                console.log(err.message);
+                res.json({message:"Server error: Can't register"});
+            }
+        )
+})
+
+router.get('/subs', (req, res)=>{
+    Subscription.find({})
+    .then((subs)=>{
+        res.json(subs);
+    }, (err)=>{
+        res.sendStatus(500);
+    });
+});
+
 //to get info of a single product
 router.get('/:id', (req, res)=>{
     let prodid = req.params.id;
@@ -17,15 +47,6 @@ router.get('/:id', (req, res)=>{
             res.json(prod);
         else res.status(404).json({error: 'Invalid product ID'})
     },(err)=>{
-        res.sendStatus(500);
-    });
-});
-
-router.get('/subs', (req, res)=>{
-    Subscription.find({})
-    .then((subs)=>{
-        res.json(subs);
-    }, (err)=>{
         res.sendStatus(500);
     });
 });
