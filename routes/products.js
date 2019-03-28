@@ -16,24 +16,46 @@ webpush.setVapidDetails(
 );
 
 router.post('/subs', (req,res)=>{
-    const subObj = req.query.subscription;
+    const subObj = JSON.parse(req.query.subscription);
     const email = req.query.email;
 
-    new Subscription({
-            email,
-            subscription:subObj
-        })
-        .save()
-        .then(
-            () => {
-                console.log("New user added");
-                res.json({success:"User registered successfully"})
-            },
-            (err) => {
-                console.log(err.message);
-                res.json({message:"Server error: Can't register", error: err});
-            }
-        )
+    Subscription.findOne({email:email})
+    .then((data)=>{
+        if(data.length > 0){
+            Subscription.update(
+                {email: email},
+                { $set:{
+                    subscription:subObj
+                    }
+                },(err,doc)=>{
+                    if(err)res.json(err);
+                    else res.json({success: `User ${email} updated`});
+                });
+        }else{
+            new Subscription({
+                email,
+                subscription:subObj
+            })
+            .save()
+            .then(
+                () => {
+                    console.log("New user added");
+                    res.json({success:"User registered successfully"})
+                },
+                (err) => {
+                    console.log(err.message);
+                    res.json({message:"Server error: Can't register", error: err});
+                }
+            )
+        }
+    },
+    (err) => {
+        console.log(err.message);
+        res.json({message:"Server error: Can't register", error: err});
+    })
+
+
+    
 })
 
 router.get('/subs', (req, res)=>{
