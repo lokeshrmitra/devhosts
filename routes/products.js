@@ -46,7 +46,10 @@ router.post('/subs', (req,res)=>{
                     console.log(err.message);
                     res.json({message:"Server error: Can't register", error: err});
                 }
-            )
+            ).catch(err=>{
+                console.log(err.message);
+                res.json({message:"Server error: Couldn't register", error: err});
+            })  
         }
     },
     (err) => {
