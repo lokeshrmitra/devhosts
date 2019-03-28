@@ -75,8 +75,9 @@ router.post('/subs/send', (req, res)=>{
     const email = req.body.email;
     Subscription.findOne({email})
     .then((sub)=>{
-        webpush.sendNotification(sub, 'Hello from the other side');
-        res.json({message:'push sent successfully', sub});
+        webpush.sendNotification(sub, 'Hello from the other side')
+        .then((response)=>res.json({message:'push sent successfully', response}))
+        .catch(err=>res.json(err))        
     }, (err)=>{
         res.json(err);
     });
