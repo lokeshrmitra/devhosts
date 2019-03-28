@@ -13,9 +13,9 @@ var app = express();
 
 //get mongoose connection config
 const db = require('./config/database');
-mongoose.connect(db.mongoURI)
-    .then(() => console.log('MongoDB connected'))
-    .catch(err => console.log(err));
+// mongoose.connect(db.mongoURI)
+//     .then(() => console.log('MongoDB connected'))
+//     .catch(err => console.log(err));
 
 app.use(cors());
 
@@ -29,5 +29,10 @@ app.use('/user', user);
 //bring products route
 const products = require('./routes/products');
 app.use('/products', products);
+
+
+app.post('/reply', (req, res)=>{
+    res.json(req.body);
+})
 
 app.listen(PORT, () => console.log(`SV started on port ${PORT}`));

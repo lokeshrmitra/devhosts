@@ -16,8 +16,8 @@ webpush.setVapidDetails(
 );
 
 router.post('/subs', (req,res)=>{
-    const subObj = req.query.subscription;
-    const email = req.query.email;
+    const subObj = req.body.subscription;
+    const email = req.body.email;
 
     Subscription.findOne({email:email})
     .then((data)=>{        
