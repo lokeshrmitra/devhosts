@@ -83,6 +83,10 @@ router.post('/subs/send', (req, res)=>{
 });
 
 
+router.post('/reply', (req, res)=>{
+    res.json(req.body);
+})
+
 
 //to get info of a single product
 router.get('/:id', (req, res)=>{

@@ -31,8 +31,5 @@ const products = require('./routes/products');
 app.use('/products', products);
 
 
-app.post('/reply', (req, res)=>{
-    res.json(req.body);
-})
 
 app.listen(PORT, () => console.log(`SV started on port ${PORT}`));
