@@ -74,14 +74,14 @@ router.get('/subs', (req, res)=>{
 router.post('/subs/send', (req, res)=>{
     const email = req.body.email;
     Subscription.findOne({email})
-    .then((sub)=>{
+    .then((sub)=>{        
         webpush.sendNotification(sub, 'Hello from the other side')
         .catch((err) => {            
             console.log('Subscription is no longer valid: ', err);
-            res.json({message: "ERRR", err});
+            res.json({message: "ERRR", err, sub});
           });
     }, (err)=>{
-        res.json(err);
+        res.json({err, sub});
     });
 });
 
