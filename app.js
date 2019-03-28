@@ -13,9 +13,9 @@ var app = express();
 
 //get mongoose connection config
 const db = require('./config/database');
-// mongoose.connect(db.mongoURI)
-//     .then(() => console.log('MongoDB connected'))
-//     .catch(err => console.log(err));
+mongoose.connect(db.mongoURI)
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.log(err));
 
 app.use(cors());
 
