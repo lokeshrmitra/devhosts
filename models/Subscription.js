@@ -5,6 +5,7 @@ const SubscriptionSchema = new Schema({
     email:String,
     subscription:{
         endpoint: String,
+        expirationTime:Number,
         keys: {
             p256dh: String,
             auth: String
