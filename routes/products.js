@@ -16,12 +16,12 @@ webpush.setVapidDetails(
 );
 
 router.post('/subs', (req,res)=>{
-    const subObj = JSON.parse(req.query.subscription);
+    const subObj = req.query.subscription;
     const email = req.query.email;
 
     Subscription.findOne({email:email})
-    .then((data)=>{
-        if(data.length > 0){
+    .then((data)=>{        
+        if(data != null){
             Subscription.update(
                 {email: email},
                 { $set:{
@@ -53,9 +53,10 @@ router.post('/subs', (req,res)=>{
         console.log(err.message);
         res.json({message:"Server error: Can't register", error: err});
     })
-
-
-    
+    .catch(err=>{
+        console.log(err.message);
+        res.json({message:"Server error: Couldn't register", error: err});
+    })   
 })
 
 router.get('/subs', (req, res)=>{

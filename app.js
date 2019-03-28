@@ -17,15 +17,11 @@ mongoose.connect(db.mongoURI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
 
-app.use(cors())
-//app.use('/static', express.static(path.join(__dirname, '/static')));
+app.use(cors());
 
 //body-parser middleware
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-
-//set up static public folder
-app.use(express.static(path.join(__dirname, 'public')));
 
 //bring user routes
 const user = require('./routes/user');
