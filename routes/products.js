@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 //get the products module
 require('../models/Product');
 const Product = mongoose.model('product');
+require('../models/Subscription');
 const Subscription = mongoose.model('subscription');
 
 //to get info of a single product
@@ -26,8 +27,8 @@ router.get('/subs', (req, res)=>{
         res.json(subs);
     }, (err)=>{
         res.sendStatus(500);
-    })
-})
+    });
+});
 
 //to get info of all products
 router.get('/', (req,res)=>{

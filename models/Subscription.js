@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const Subscription = new Schema({
+const SubscriptionSchema = new Schema({
     email:String,
     subscription:{
         endpoint: String,
@@ -14,4 +14,4 @@ const Subscription = new Schema({
     strict: false
 });
 
-mongoose.model('subscription', Subscription);
+mongoose.model('subscription', SubscriptionSchema);
