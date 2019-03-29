@@ -1,8 +1,0 @@
-web-push send-notification 
---endpoint=https://fcm.googleapis.com/fcm/send/frzwQI9ZLHk:APA91bEggICfTaupfwbkB7_c0N1GUbaSkO_H3WnjT6H832CRS8OGZ9Im8ipT9XoRbO_mLuXH4705nZRPFMzaOobAXqp5QZ6HcTg7uHnhv3F35v6um1Wc0u2o-BsmlqV57njyqYp-Z3b8
---key=BDKOwEyQitw9Qkv8RsnJFE1w2SBWxSKfK4JMFM6DhMp2bgKT3OTuCYheuVEhBBC5j4b0yaNX-7nuvKLz_-oN3H0
---auth=ppkLi_lil0CDX0a8LHcCDg
---vapid-subject=mailto:example@yourdomain.org 
---vapid-pubkey=BB-vYEM6B3wVD1JX4hYuuGoFJsLeRGMt7G8to6ZAyQyHHTwzUAk3AekCU7r_yRSL3xDEX2T1m9KJsraElv5icfk 
---vapid-pvtkey=hKEheVRB2afntwIU1WtLnNusfEa2LI1luCwRBuYk_Jk 
---payload=Lokesh_mitra!
