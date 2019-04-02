@@ -16,12 +16,12 @@ webpush.setVapidDetails(
 );
 
 router.post('/subs', (req,res)=>{
-    const subObj = JSON.parse(req.query.subscription);
-    const email = req.query.email;
+    const subObj = req.body.subscription;
+    const email = req.body.email;
 
     Subscription.findOne({email:email})
     .then((data)=>{
-        if(data.length > 0){
+        if(data != null){
             Subscription.update(
                 {email: email},
                 { $set:{
@@ -46,16 +46,20 @@ router.post('/subs', (req,res)=>{
                     console.log(err.message);
                     res.json({message:"Server error: Can't register", error: err});
                 }
-            )
+            ).catch(err=>{
+                console.log(err.message);
+                res.json({message:"Server error: Couldn't register", error: err});
+            })
         }
     },
     (err) => {
         console.log(err.message);
         res.json({message:"Server error: Can't register", error: err});
     })
-
-
-
+    .catch(err=>{
+        console.log(err.message);
+        res.json({message:"Server error: Couldn't register", error: err});
+    })
 })
 
 router.get('/subs', (req, res)=>{
@@ -77,16 +81,23 @@ router.get('/subs/:email', (req, res)=>{
 });
 
 router.post('/subs/send', (req, res)=>{
-    const email = req.query.email;
+    const email = req.body.email;
     Subscription.findOne({email})
     .then((sub)=>{
-        webpush.sendNotification(sub, 'Hello from the other side');
-        res.json({message:'push sent successfully', sub});
+        webpush.sendNotification(sub, 'Hello from the other side')
+        .catch((err) => {
+            console.log('Subscription is no longer valid: ', err);
+            res.json({message: "ERRR", err, sub});
+          });
     }, (err)=>{
-        res.json(err);
+        res.json({err, sub});
     });
 });
 
+
+router.post('/reply', (req, res)=>{
+    res.json(req.body);
+})
 
 
 //to get info of a single product
