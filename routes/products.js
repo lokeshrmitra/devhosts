@@ -55,11 +55,20 @@ router.post('/subs', (req,res)=>{
     })
 
 
-    
+
 })
 
 router.get('/subs', (req, res)=>{
     Subscription.find({})
+    .then((subs)=>{
+        res.json(subs);
+    }, (err)=>{
+        res.sendStatus(500);
+    });
+});
+
+router.get('/subs/:email', (req, res)=>{
+    Subscription.find({email: req.params.email})
     .then((subs)=>{
         res.json(subs);
     }, (err)=>{

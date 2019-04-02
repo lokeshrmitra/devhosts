@@ -17,7 +17,7 @@ mongoose.connect(db.mongoURI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
 
-app.use(cors())
+app.use(cors());
 //app.use('/static', express.static(path.join(__dirname, '/static')));
 
 //body-parser middleware
