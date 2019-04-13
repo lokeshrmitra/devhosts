@@ -80,8 +80,8 @@ router.get('/subs/:email', (req, res)=>{
     });
 });
 
-router.post('/subs/send', (req, res)=>{
-    const email = req.body.email;
+router.post('/subs/send/:email', (req, res)=>{
+    const email = req.params.email;
     Subscription.findOne({email})
     .then((sub)=>{
         webpush.sendNotification(sub, 'Hello from the other side')
